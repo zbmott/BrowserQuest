@@ -68,7 +68,8 @@ var requirejs, require, define;
         //gets replaced. Used in require/node.js
         fs = require('fs');
         vm = require('vm');
-        path = require('path');
+//        path = require('path');
+        path = fs;
         nodeRequire = require;
         nodeDefine = define;
         reqMain = require.main;
@@ -2170,7 +2171,8 @@ var requirejs, require, define;
         req = requirejsVars.require,
         def = requirejsVars.define,
         fs = nodeReq('fs'),
-        path = nodeReq('path'),
+//        path = nodeReq('path'),
+        path = fs;
         vm = nodeReq('vm');
 
     //Supply an implementation that allows synchronous get of a module.
