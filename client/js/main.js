@@ -315,22 +315,27 @@ define(['jquery', 'app'], function($, App) {
                     }
                 }
 
+                var DIRECTION_VECTORS = {
+                  65: [-1, 0],
+                  37: [-1, 0],
+                  83: [0, 1],
+                  40: [0, 1],
+                  68: [1, 0],
+                  39: [1, 0],
+                  87: [0, -1],
+                  38: [0, -1]
+                }
+
+                var vector = DIRECTION_VECTORS[key];
                 var player = app.game.player;                
-                // a
-                if(key === 65 || key === 37) {
-                  player.applyMovementVector([-1, 0]);
-                }
-                // s
-                else if(key === 83 || key === 40) {
-                  player.applyMovementVector([0, 1]);
-                }
-                // d
-                else if(key === 68 || key === 39) {
-                  player.applyMovementVector([1, 0]);
-                }
-                // w
-                else if(key === 87 || key === 38) {
-                  player.applyMovementVector([0, -1]);
+                if(vector) {
+                  var dX = vector[0], dY = vector[1];
+                  var mob = app.game.getMobAt(player.gridX + dX, player.gridY + dY);
+                  if(mob) {
+                    game.makePlayerAttack(mob);
+                  } else {
+                    player.applyMovementVector(vector);
+                  }
                 }
             });
             

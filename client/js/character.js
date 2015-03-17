@@ -24,7 +24,9 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     		this.path = null;
     		this.newDestination = null;
     		this.adjacentTiles = {};
-		
+        this.movementCooldown = 100;
+        this.isMovementVectorCooling = false;	
+	
     		// Combat
     		this.target = null;
             this.unconfirmedTarget = null;
@@ -106,15 +108,29 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     	    this.setOrientation(orientation);
     	    this.animate("walk", this.walkSpeed);
     	},
-   
+  
+      setMovementVectorCooldown: function() {
+        var ref = this;
+        this.isMovementVectorCooling = true;
+        _.delay(this.clearMovementVectorCooldown, this.movementCooldown, ref);
+      },
+
+      clearMovementVectorCooldown: function(self) {
+        self.isMovementVectorCooling = false;
+      },
+ 
       applyMovementVector: function(v) {
-        var dX = v[0], dY = v[1];
-        if(!this.isMoving()) {
-          this.moveTo_(this.gridX + dX, this.gridY + dY);
-        } else {
-          var new_x = this.destination.gridX + dX;
-          var new_y = this.destination.gridY + dY
-          this.moveTo_(new_x, new_y);
+        console.log(this.isMovementVectorCooling);
+        if(!this.isMovementVectorCooling) {
+          var dX = v[0], dY = v[1];
+          if(!this.isMoving()) {
+            this.moveTo_(this.gridX + dX, this.gridY + dY);
+          } else {
+            var new_x = this.destination.gridX + dX;
+            var new_y = this.destination.gridY + dY
+            this.moveTo_(new_x, new_y);
+          }
+          this.setMovementVectorCooldown();
         }
       },
 
