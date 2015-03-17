@@ -316,23 +316,21 @@ define(['jquery', 'app'], function($, App) {
                 }
 
                 var player = app.game.player;                
-                if(!player.isMoving()) { 
-                  // a
-                  if(key === 65) {
-                    player.applyMovementVector([-1, 0]);
-                  }
-                  // s
-                  else if(key === 83) {
-                    player.applyMovementVector([0, 1]);
-                  }
-                  // d
-                  else if(key === 68) {
-                    player.applyMovementVector([1, 0]);
-                  }
-                  // w
-                  else if(key === 87) {
-                    player.applyMovementVector([0, -1]);
-                  }
+                // a
+                if(key === 65 || key === 37) {
+                  player.applyMovementVector([-1, 0]);
+                }
+                // s
+                else if(key === 83 || key === 40) {
+                  player.applyMovementVector([0, 1]);
+                }
+                // d
+                else if(key === 68 || key === 39) {
+                  player.applyMovementVector([1, 0]);
+                }
+                // w
+                else if(key === 87 || key === 38) {
+                  player.applyMovementVector([0, -1]);
                 }
             });
             

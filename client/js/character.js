@@ -107,44 +107,50 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     	    this.animate("walk", this.walkSpeed);
     	},
    
-        applyMovementVector: function(v) {
-          var posX = this.gridX, posY = this.gridY, dX = v[0], dY = v[1];
-          this.moveTo_(posX + dX, posY + dY);
-        },
-        moveTo_: function(x, y, callback) {
-            this.destination = { gridX: x, gridY: y };
-            this.adjacentTiles = {};
-        
-            if(this.isMoving()) {
-                this.continueTo(x, y);
-            }
-            else {
-                var path = this.requestPathfindingTo(x, y);
-            
-                this.followPath(path);
-            }
-        },
-    
-        requestPathfindingTo: function(x, y) {
-            if(this.request_path_callback) {
-                return this.request_path_callback(x, y);
-            } else {
-                log.error(this.id + " couldn't request pathfinding to "+x+", "+y);
-                return [];
-            }
-        },
-    
-        onRequestPath: function(callback) {
-            this.request_path_callback = callback;
-        },
-    
-        onStartPathing: function(callback) {
-            this.start_pathing_callback = callback;
-        },
-    
-        onStopPathing: function(callback) {
-            this.stop_pathing_callback = callback;
-        },
+      applyMovementVector: function(v) {
+        var dX = v[0], dY = v[1];
+        if(!this.isMoving()) {
+          this.moveTo_(this.gridX + dX, this.gridY + dY);
+        } else {
+          var new_x = this.destination.gridX + dX;
+          var new_y = this.destination.gridY + dY
+          this.moveTo_(new_x, new_y);
+        }
+      },
+
+      moveTo_: function(x, y, callback) {
+          this.destination = { gridX: x, gridY: y };
+          this.adjacentTiles = {};
+      
+          if(this.isMoving()) {
+              this.continueTo(x, y);
+          }
+          else {
+              var path = this.requestPathfindingTo(x, y);
+              this.followPath(path);
+          }
+      },
+  
+      requestPathfindingTo: function(x, y) {
+          if(this.request_path_callback) {
+              return this.request_path_callback(x, y);
+          } else {
+              log.error(this.id + " couldn't request pathfinding to "+x+", "+y);
+              return [];
+          }
+      },
+  
+      onRequestPath: function(callback) {
+          this.request_path_callback = callback;
+      },
+  
+      onStartPathing: function(callback) {
+          this.start_pathing_callback = callback;
+      },
+  
+      onStopPathing: function(callback) {
+          this.stop_pathing_callback = callback;
+      },
 	
     	followPath: function(path) {
     		if(path.length > 1) { // Length of 1 means the player has clicked on himself
