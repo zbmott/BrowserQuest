@@ -106,7 +106,11 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     	    this.setOrientation(orientation);
     	    this.animate("walk", this.walkSpeed);
     	},
-    
+   
+        applyMovementVector: function(v) {
+          var posX = this.gridX, posY = this.gridY, dX = v[0], dY = v[1];
+          this.moveTo_(posX + dX, posY + dY);
+        },
         moveTo_: function(x, y, callback) {
             this.destination = { gridX: x, gridY: y };
             this.adjacentTiles = {};
