@@ -97,7 +97,14 @@ Types = {
         DOWN: 2,
         LEFT: 3,
         RIGHT: 4
-    }
+    },
+	
+	Patrols: {
+		RANDOM: 1,
+		LINE: 2,
+		SQUARE: 3,
+		PLUS: 4,
+	}
 };
 
 var kinds = {
@@ -287,6 +294,15 @@ Types.getOrientationAsString = function(orientation) {
         case Types.Orientations.RIGHT: return "right"; break;
         case Types.Orientations.UP: return "up"; break;
         case Types.Orientations.DOWN: return "down"; break;
+    }
+};
+
+Types.getPatrolAsString = function(patrol) {
+    switch(patrol) {
+        case Types.Patrols.RANDOM: return "random"; break;
+        case Types.Patrols.LINE: return "line"; break;
+        case Types.Patrols.SQUARE: return "square"; break;
+        case Types.Patrols.PLUS: return "plus"; break;
     }
 };
 

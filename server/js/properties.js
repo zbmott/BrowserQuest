@@ -10,7 +10,8 @@ var Properties = {
         },
         hp: 25,
         armor: 1,
-        weapon: 1
+        weapon: 1,
+		patrol: 1
     },
     
     skeleton: {
@@ -22,7 +23,8 @@ var Properties = {
         },
         hp: 110,
         armor: 2,
-        weapon: 2
+        weapon: 2,
+		patrol: 2
     },
     
     goblin: {
@@ -34,7 +36,8 @@ var Properties = {
         },
         hp: 90,
         armor: 2,
-        weapon: 1
+        weapon: 1,
+		patrol: 4
     },
     
     ogre: {
@@ -47,7 +50,8 @@ var Properties = {
         },
         hp: 200,
         armor: 3,
-        weapon: 2
+        weapon: 2,
+		patrol: 3
     },
     
     spectre: {
@@ -59,7 +63,8 @@ var Properties = {
         },
         hp: 250,
         armor: 2,
-        weapon: 4
+        weapon: 4,
+		patrol: 1
     },
     
     deathknight: {
@@ -69,7 +74,8 @@ var Properties = {
         },
         hp: 250,
         armor: 3,
-        weapon: 3
+        weapon: 3,
+		patrol: 3
     },
     
     crab: {
@@ -81,7 +87,8 @@ var Properties = {
         },
         hp: 60,
         armor: 2,
-        weapon: 1
+        weapon: 1,
+		patrol: 1
     },
     
     snake: {
@@ -93,7 +100,8 @@ var Properties = {
         },
         hp: 150,
         armor: 3,
-        weapon: 2
+        weapon: 2,
+		patrol: 1
     },
     
     skeleton2: {
@@ -105,7 +113,8 @@ var Properties = {
         },
         hp: 200,
         armor: 3,
-        weapon: 3
+        weapon: 3,
+		patrol: 2
     },
     
     eye: {
@@ -117,7 +126,8 @@ var Properties = {
         },
         hp: 200,
         armor: 3,
-        weapon: 3
+        weapon: 3,
+		patrol: 1
     },
     
     bat: {
@@ -128,7 +138,8 @@ var Properties = {
         },
         hp: 80,
         armor: 2,
-        weapon: 1
+        weapon: 1,
+		patrol: 1
     },
     
     wizard: {
@@ -139,7 +150,8 @@ var Properties = {
         },
         hp: 100,
         armor: 2,
-        weapon: 6
+        weapon: 6,
+		patrol: 3
     },
     
     boss: {
@@ -148,7 +160,8 @@ var Properties = {
         },
         hp: 700,
         armor: 6,
-        weapon: 7
+        weapon: 7,
+		patrol: 4
     }
 };
 
@@ -178,6 +191,10 @@ Properties.getWeaponLevel = function(kind) {
 
 Properties.getHitPoints = function(kind) {
     return Properties[Types.getKindAsString(kind)].hp;
+};
+
+Properties.getPatrol = function(kind) {
+	return Properties[Types.getKindAsString(kind)].patrol;
 };
 
 module.exports = Properties;

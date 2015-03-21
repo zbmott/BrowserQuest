@@ -18,6 +18,9 @@ module.exports = Mob = Character.extend({
         this.respawnTimeout = null;
         this.returnTimeout = null;
         this.isDead = false;
+		this.patrolForward = Utils.coinflip();
+		this.patrolHoriz = Utils.coinflip();
+		this.patrolCounter = 0
     },
     
     destroy: function() {
@@ -128,6 +131,9 @@ module.exports = Mob = Character.extend({
     
     resetPosition: function() {
         this.setPosition(this.spawningX, this.spawningY);
+		this.patrolForward = Utils.coinflip();
+		this.patrolHoriz = Utils.coinflip();
+		this.patrolCounter = 0
     },
     
     returnToSpawningPosition: function(waitDuration) {
@@ -152,6 +158,89 @@ module.exports = Mob = Character.extend({
             this.move_callback(this);
         }
     },
+	
+	patrol: function(mobArea) {
+		var self = this;
+		if(!this.hasTarget() && !this.isDead) {
+			switch(Properties.getPatrol(self.kind)){
+				case Types.Patrols.RANDOM:
+					var pos = mobArea._getRandomPositionInsideArea();
+					self.move(pos.x,pos.y);
+					break;
+				case Types.Patrols.LINE:
+					var p = self.patrolForward?1:-1;
+					var pos = {}
+					pos.x = self.patrolHoriz?self.x+p:self.x;
+					pos.y = self.patrolHoriz?self.y:self.y+p;
+					if(mobArea.world.isValidPosition(pos.x, pos.y)){
+						self.move(pos.x,pos.y);
+					}else{
+						self.patrolForward = !self.patrolForward;
+					}
+					break;
+				case Types.Patrols.SQUARE:
+					var p = self.patrolForward?1:-1;
+					var h = self.patrolHoriz?1:-1;
+					var pos = {}
+					switch(self.orientation){
+						case Types.Orientations.LEFT:
+							pos.x = self.x-p
+							pos.y = self.y
+							break;
+						case Types.Orientations.RIGHT:
+							pos.x = self.x+p
+							pos.y = self.y
+							break;
+						case Types.Orientations.UP:
+							pos.x = self.x
+							pos.y = self.y-p
+							break;
+						case Types.Orientations.DOWN:
+							pos.x = self.x
+							pos.y = self.y+p
+							break;
+					}
+					if(mobArea.world.isValidPosition(pos.x, pos.y)){
+						self.move(pos.x,pos.y);
+					}else{
+						self.orientation = self.turn(h);
+					}
+					break;
+				case Types.Patrols.PLUS:
+					var p = self.patrolForward?1:-1;
+					var h = self.patrolHoriz?1:-1;
+					var pos = {};
+					if(self.x==self.spawningX && self.y==self.spawningY){
+						self.orientation = self.turn(h);
+					}
+					switch(self.orientation){
+						case Types.Orientations.LEFT:
+							pos.x = self.x-p
+							pos.y = self.y
+							break;
+						case Types.Orientations.RIGHT:
+							pos.x = self.x+p
+							pos.y = self.y
+							break;
+						case Types.Orientations.UP:
+							pos.x = self.x
+							pos.y = self.y-p
+							break;
+						case Types.Orientations.DOWN:
+							pos.x = self.x
+							pos.y = self.y+p
+							break;
+					}
+					if(mobArea.world.isValidPosition(pos.x, pos.y)){
+						self.move(pos.x,pos.y);
+					}else{
+						self.orientation = self.turn(h);
+						self.orientation = self.turn(h);
+					}
+					break;
+			}
+		}
+	},
     
     updateHitPoints: function() {
         this.resetHitPoints(Properties.getHitPoints(this.kind));
@@ -159,5 +248,24 @@ module.exports = Mob = Character.extend({
     
     distanceToSpawningPoint: function(x, y) {
         return Utils.distanceTo(x, y, this.spawningX, this.spawningY);
-    }
+    },
+	
+	turn: function(direction){
+		var ans = this.orientation;
+		switch(this.orientation){
+			case Types.Orientations.LEFT:
+				ans = direction>0?Types.Orientations.UP:Types.Orientations.DOWN;
+				break;
+			case Types.Orientations.RIGHT:
+				ans = direction>0?Types.Orientations.DOWN:Types.Orientations.UP;
+				break;
+			case Types.Orientations.UP:
+				ans = direction>0?Types.Orientations.RIGHT:Types.Orientations.LEFT;
+				break;
+			case Types.Orientations.DOWN:
+				ans = direction>0?Types.Orientations.LEFT:Types.Orientations.RIGHT;
+				break;
+		}
+		return ans
+	}
 });

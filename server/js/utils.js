@@ -22,6 +22,10 @@ Utils.randomInt = function(min, max) {
     return min + Math.floor(Math.random() * (max - min + 1));
 };
 
+Utils.coinflip = function(){
+	return Utils.random(2)===1?true:false;
+};
+
 Utils.clamp = function(min, max, value) {
     if(value < min) {
         return min;
