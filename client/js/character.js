@@ -83,16 +83,38 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
         	}
     	},
     
-        turnTo: function(orientation) {
-            this.orientation = orientation;
-            this.idle(orientation);
-        },
+      turnTo: function(orientation) {
+          this.orientation = orientation;
+          this.idle(orientation);
+      },
 	
     	setOrientation: function(orientation) {
     	    if(orientation) {
     	        this.orientation = orientation;
     	    }
     	},
+
+      getVectorFromOrientation: function(orientation) {
+        var vector;
+        orientation = orientation || this.orientation;
+
+        switch(orientation) {
+          case Types.Orientations.DOWN:
+            vector = [0, 1];
+            break;
+          case Types.Orientations.UP:
+            vector = [0, -1];
+            break;
+          case Types.Orientations.LEFT:
+            vector = [-1, 0];
+            break;
+          case Types.Orientations.RIGHT:
+            vector = [1, 0];
+            break;
+        }
+
+        return vector;
+      },
 	
     	idle: function(orientation) {
     	    this.setOrientation(orientation);
@@ -108,7 +130,7 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     	    this.setOrientation(orientation);
     	    this.animate("walk", this.walkSpeed);
     	},
-  
+
       setMovementVectorCooldown: function() {
         var ref = this;
         this.isMovementVectorCooling = true;

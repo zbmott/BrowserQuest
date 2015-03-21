@@ -23,6 +23,8 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
         
             // Player
             this.player = new Warrior("player", "");
+
+window.player = this.player;
     
             // Game state
             this.entities = {};
@@ -1519,19 +1521,27 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
          * @returns {Object} An object containing x and y properties.
          */
         getMouseGridPosition: function() {
-            var mx = this.mouse.x,
-                my = this.mouse.y,
-                c = this.renderer.camera,
-                s = this.renderer.scale,
-                ts = this.renderer.tilesize,
-                offsetX = mx % (ts * s),
-                offsetY = my % (ts * s),
-                x = ((mx - offsetX) / (ts * s)) + c.gridX,
-                y = ((my - offsetY) / (ts * s)) + c.gridY;
-        
-                return { x: x, y: y };
+          var mx = this.mouse.x,
+              my = this.mouse.y,
+              c = this.renderer.camera,
+              s = this.renderer.scale,
+              ts = this.renderer.tilesize,
+              offsetX = mx % (ts * s),
+              offsetY = my % (ts * s),
+              x = ((mx - offsetX) / (ts * s)) + c.gridX,
+              y = ((my - offsetY) / (ts * s)) + c.gridY;
+      
+              return { x: x, y: y };
         },
-    
+
+        /**
+         * Returns the next cell in the direction the player is facing.
+         */
+        getNextTile: function() {
+          var v = this.player.getVectorFromOrientation();
+          return {x: this.player.gridX + v[0], y: this.player.gridY + v[1]};
+        },   
+
         /**
          * Moves a character to a given location on the world grid.
          *
@@ -1869,7 +1879,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
          * 
          */
         movecursor: function() {
-            var mouse = this.getMouseGridPosition(),
+            var mouse = this.getNextTile(),
                 x = mouse.x,
                 y = mouse.y;
 
@@ -1925,15 +1935,14 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
          * Processes game logic when the user triggers a click/touch event during the game.
          */
         click: function() {
-            var pos = this.getMouseGridPosition(),
-                entity;
-            
-            if(pos.x === this.previousClickPosition.x
-            && pos.y === this.previousClickPosition.y) {
-                return;
-            } else {
-                this.previousClickPosition = pos;
-            }
+          var pos = this.getNextTile(), entity;
+
+          if(pos.x === this.previousClickPosition.x
+          && pos.y === this.previousClickPosition.y) {
+              return;
+          } else {
+              this.previousClickPosition = pos;
+          }
 	        
     	    if(this.started
     	    && this.player
@@ -1942,28 +1951,31 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
     	    && !this.player.isDead
     	    && !this.hoveringCollidingTile
     	    && !this.hoveringPlateauTile) {
-        	    entity = this.getEntityAt(pos.x, pos.y);
-    	    
-        	    if(entity instanceof Mob) {
-        	        this.makePlayerAttack(entity);
-        	    }
-        	    else if(entity instanceof Item) {
-        	        this.makePlayerGoToItem(entity);
-        	    }
-        	    else if(entity instanceof Npc) {
-        	        if(this.player.isAdjacentNonDiagonal(entity) === false) {
-                        this.makePlayerTalkTo(entity);
-        	        } else {
-                        this.makeNpcTalk(entity);
-        	        }
-        	    }
-        	    else if(entity instanceof Chest) {
-        	        this.makePlayerOpenChest(entity);
-        	    }
-        	    else {
-        	        this.makePlayerGoTo(pos.x, pos.y);
-        	    }
+            this.makePlayerInteractWith(pos);
         	}
+        },
+
+        makePlayerInteractWith: function(pos) {
+          var entity = this.getEntityAt(pos.x, pos.y);
+
+          console.log(entity);
+
+          if(entity instanceof Mob) {
+              this.makePlayerAttack(entity);
+          }
+          else if(entity instanceof Item) {
+              this.makePlayerGoToItem(entity);
+          }
+          else if(entity instanceof Npc) {
+              if(this.player.isAdjacentNonDiagonal(entity) === false) {
+                    this.makePlayerTalkTo(entity);
+              } else {
+                    this.makeNpcTalk(entity);
+              }
+          }
+          else if(entity instanceof Chest) {
+              this.makePlayerOpenChest(entity);
+          }
         },
         
         isMobOnSameTile: function(mob, x, y) {

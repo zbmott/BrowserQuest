@@ -177,7 +177,7 @@ function(Camera, Item, Character, Player, Timer) {
         },
     
         drawTargetCell: function() {
-            var mouse = this.game.getMouseGridPosition();
+            var mouse = this.game.getNextTile();
         
             if(this.game.targetCellVisible && !(mouse.x === this.game.selectedX && mouse.y === this.game.selectedY)) {
                 this.drawCellHighlight(mouse.x, mouse.y, this.game.targetColor);
@@ -185,7 +185,7 @@ function(Camera, Item, Character, Player, Timer) {
         },
     
         drawAttackTargetCell: function() {
-            var mouse = this.game.getMouseGridPosition(),
+            var mouse = this.game.getNextTile(),
                 entity = this.game.getEntityAt(mouse.x, mouse.y),
                 s = this.scale;
         

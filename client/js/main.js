@@ -332,16 +332,12 @@ define(['jquery', 'app'], function($, App) {
                 if(vector) {
                   var dX = vector[0], dY = vector[1];
                   var posX = player.gridX, posY = player.gridY;
-                  var mob = app.game.getMobAt(posX + dX, posY + dY);
-
                   if(player.isMoving()) {
                     posX = player.destination.gridX;
                     posY = player.destination.gridY;
                   }
 
-                  if(mob) {
-                    game.makePlayerAttack(mob);
-                  } else if(!app.game.isZoningTile(posX, posY)) {
+                  if(!app.game.isZoningTile(posX, posY)) {
                     player.applyMovementVector(vector);
                   }
                 }
