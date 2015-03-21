@@ -314,6 +314,29 @@ define(['jquery', 'app'], function($, App) {
                         app.showChat();
                     }
                 }
+
+                var DIRECTION_VECTORS = {
+                  65: [-1, 0],
+                  37: [-1, 0],
+                  83: [0, 1],
+                  40: [0, 1],
+                  68: [1, 0],
+                  39: [1, 0],
+                  87: [0, -1],
+                  38: [0, -1]
+                }
+
+                var vector = DIRECTION_VECTORS[key];
+                var player = app.game.player;                
+                if(vector) {
+                  var dX = vector[0], dY = vector[1];
+                  var mob = app.game.getMobAt(player.gridX + dX, player.gridY + dY);
+                  if(mob) {
+                    game.makePlayerAttack(mob);
+                  } else {
+                    player.applyMovementVector(vector);
+                  }
+                }
             });
             
             $('#chatinput').keydown(function(e) {
@@ -396,28 +419,6 @@ define(['jquery', 'app'], function($, App) {
                         $chat.focus();
                         return false;
                     }
-                }
-				var DIRECTION_VECTORS = {
-                  65: [-1, 0],
-                  37: [-1, 0],
-                  83: [0, 1],
-                  40: [0, 1],
-                  68: [1, 0],
-                  39: [1, 0],
-                  87: [0, -1],
-                  38: [0, -1]
-                }
-
-                var vector = DIRECTION_VECTORS[key];
-                var player = app.game.player;                
-                if(vector) {
-                  var dX = vector[0], dY = vector[1];
-                  var mob = app.game.getMobAt(player.gridX + dX, player.gridY + dY);
-                  if(mob) {
-                    game.makePlayerAttack(mob);
-                  } else {
-                    player.applyMovementVector(vector);
-                  }
                 }
             });
             
