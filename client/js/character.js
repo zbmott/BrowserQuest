@@ -24,7 +24,7 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     		this.path = null;
     		this.newDestination = null;
     		this.adjacentTiles = {};
-        this.movementCooldown = 100;
+        this.movementCooldown = 50;
         this.isMovementVectorCooling = false;	
 	
     		// Combat
@@ -120,16 +120,15 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
       },
  
       applyMovementVector: function(v) {
-        console.log(this.isMovementVectorCooling);
         if(!this.isMovementVectorCooling) {
           var dX = v[0], dY = v[1];
-          if(!this.isMoving()) {
-            this.moveTo_(this.gridX + dX, this.gridY + dY);
-          } else {
-            var new_x = this.destination.gridX + dX;
-            var new_y = this.destination.gridY + dY
-            this.moveTo_(new_x, new_y);
+          var posX = this.gridX, posY = this.gridY;
+
+          if(this.isMoving()) {
+            posX = this.destination.gridX, posY = this.destination.gridY;
           }
+
+          this.moveTo_(posX + dX, posY + dY);
           this.setMovementVectorCooldown();
         }
       },
