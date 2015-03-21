@@ -1905,10 +1905,18 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
 			y = mouse.y-this.player.gridY;
 			
 			if(this.player){
-				if(Math.abs(y)<Math.abs(x)){
-					this.player.turnTo(x>0?Types.Orientations.RIGHT:Types.Orientations.LEFT);
-				}else if(Math.abs(y)>Math.abs(x)){
-					this.player.turnTo(y>0?Types.Orientations.DOWN:Types.Orientations.UP);
+				if(this.player.isMoving()){
+					if(Math.abs(y)<Math.abs(x)){
+						this.player.walk(x>0?Types.Orientations.RIGHT:Types.Orientations.LEFT);
+					}else if(Math.abs(y)>Math.abs(x)){
+						this.player.walk(y>0?Types.Orientations.DOWN:Types.Orientations.UP);
+					}
+				}else if(!this.player.isAttacking()){
+					if(Math.abs(y)<Math.abs(x)){
+						this.player.turnTo(x>0?Types.Orientations.RIGHT:Types.Orientations.LEFT);
+					}else if(Math.abs(y)>Math.abs(x)){
+						this.player.turnTo(y>0?Types.Orientations.DOWN:Types.Orientations.UP);
+					}
 				}
 			}
 		},
