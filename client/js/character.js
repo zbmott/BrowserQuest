@@ -85,7 +85,7 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     
         turnTo: function(orientation) {
             this.orientation = orientation;
-            this.idle();
+            this.idle(orientation);
         },
 	
     	setOrientation: function(orientation) {

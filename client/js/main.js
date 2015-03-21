@@ -263,6 +263,8 @@ define(['jquery', 'app'], function($, App) {
                 });
             }
 
+			var player = app.game.player;  
+			
             $('body').unbind('click');
             $('body').click(function(event) {
                 var hasClosedParchment = false;
@@ -326,8 +328,7 @@ define(['jquery', 'app'], function($, App) {
                   38: [0, -1]
                 }
 
-                var vector = DIRECTION_VECTORS[key];
-                var player = app.game.player;                
+                var vector = DIRECTION_VECTORS[key];              
                 if(vector) {
                   var dX = vector[0], dY = vector[1];
                   var mob = app.game.getMobAt(player.gridX + dX, player.gridY + dY);

@@ -128,12 +128,12 @@ define(['character', 'timer'], function(Character, Timer) {
 
         updateCharacter: function(c) {
             var self = this;
-    
+			self.game.makePlayerFaceCursor();
             // Estimate of the movement distance for one update
             var tick = Math.round(16 / Math.round((c.moveSpeed / (1000 / this.game.renderer.FPS))));
     
             if(c.isMoving() && c.movement.inProgress === false) {
-                if(c.orientation === Types.Orientations.LEFT) {
+                if(c.nextGridX < c.gridX) {
                     c.movement.start(this.game.currentTime,
                                      function(x) {
                                         c.x = x;
@@ -148,7 +148,7 @@ define(['character', 'timer'], function(Character, Timer) {
                                      c.x - 16,
                                      c.moveSpeed);
                 }
-                else if(c.orientation === Types.Orientations.RIGHT) {
+                else if(c.nextGridX > c.gridX) {
                     c.movement.start(this.game.currentTime,
                                      function(x) {
                                         c.x = x;
@@ -163,7 +163,7 @@ define(['character', 'timer'], function(Character, Timer) {
                                      c.x + 16,
                                      c.moveSpeed);
                 }
-                else if(c.orientation === Types.Orientations.UP) {
+                else if(c.nextGridY < c.gridY) {
                     c.movement.start(this.game.currentTime,
                                      function(y) {
                                         c.y = y;
@@ -178,7 +178,7 @@ define(['character', 'timer'], function(Character, Timer) {
                                      c.y - 16,
                                      c.moveSpeed);
                 }
-                else if(c.orientation === Types.Orientations.DOWN) {
+                else if(c.nextGridY > c.gridY) {
                     c.movement.start(this.game.currentTime,
                                      function(y) {
                                         c.y = y;

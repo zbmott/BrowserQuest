@@ -1898,6 +1898,20 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                 }
             }
         },
+		
+		makePlayerFaceCursor: function() {
+			var mouse = this.getMouseGridPosition(),
+			x = mouse.x-this.player.gridX,
+			y = mouse.y-this.player.gridY;
+			
+			if(this.player){
+				if(Math.abs(y)<Math.abs(x)){
+					this.player.turnTo(x>0?Types.Orientations.RIGHT:Types.Orientations.LEFT);
+				}else if(Math.abs(y)>Math.abs(x)){
+					this.player.turnTo(y>0?Types.Orientations.DOWN:Types.Orientations.UP);
+				}
+			}
+		},
     
         /**
          * Processes game logic when the user triggers a click/touch event during the game.
