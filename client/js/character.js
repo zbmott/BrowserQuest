@@ -20,7 +20,8 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     		this.setAttackRate(800);
         
             // Pathing
-    		this.movement = new Transition();
+    		this.movementX = new Transition();
+        this.movementY = new Transition();
     		this.path = null;
     		this.newDestination = null;
     		this.adjacentTiles = {};

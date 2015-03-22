@@ -65,12 +65,14 @@ define(['character', 'timer'], function(Character, Timer) {
                 z = this.game.currentZoning;
     
             this.game.forEachEntity(function(entity) {
-                m = entity.movement;
-                if(m) {
-                    if(m.inProgress) {
-                        m.step(self.game.currentTime);
-                    }
-                }
+                _.each(['movementX', 'movementY'], function(prop, idx) {
+                  m = entity[prop];
+                  if(m) {
+                      if(m.inProgress) {
+                          m.step(self.game.currentTime);
+                      }
+                  }
+                });
             });
         
             if(z) {
@@ -132,15 +134,15 @@ define(['character', 'timer'], function(Character, Timer) {
             // Estimate of the movement distance for one update
             var tick = Math.round(16 / Math.round((c.moveSpeed / (1000 / this.game.renderer.FPS))));
     
-            if(c.isMoving() && c.movement.inProgress === false) {
+            if(c.isMoving() && c.movementX.inProgress === false) {
                 if(c.nextGridX < c.gridX) {
-                    c.movement.start(this.game.currentTime,
+                    c.movementX.start(this.game.currentTime,
                                      function(x) {
                                         c.x = x;
                                         c.hasMoved();
                                      },
                                      function() {
-                                        c.x = c.movement.endValue;
+                                        c.x = c.movementX.endValue;
                                         c.hasMoved();
                                         c.nextStep();
                                      },
@@ -149,13 +151,13 @@ define(['character', 'timer'], function(Character, Timer) {
                                      c.moveSpeed);
                 }
                 else if(c.nextGridX > c.gridX) {
-                    c.movement.start(this.game.currentTime,
+                    c.movementX.start(this.game.currentTime,
                                      function(x) {
                                         c.x = x;
                                         c.hasMoved();
                                      },
                                      function() {
-                                        c.x = c.movement.endValue;
+                                        c.x = c.movementX.endValue;
                                         c.hasMoved();
                                         c.nextStep();
                                      },
@@ -163,14 +165,16 @@ define(['character', 'timer'], function(Character, Timer) {
                                      c.x + 16,
                                      c.moveSpeed);
                 }
-                else if(c.nextGridY < c.gridY) {
-                    c.movement.start(this.game.currentTime,
+            }
+            if(c.isMoving() && c.movementY.inProgress === false) {
+                if(c.nextGridY < c.gridY) {
+                    c.movementY.start(this.game.currentTime,
                                      function(y) {
                                         c.y = y;
                                         c.hasMoved();
                                      },
                                      function() {
-                                        c.y = c.movement.endValue;
+                                        c.y = c.movementY.endValue;
                                         c.hasMoved();
                                         c.nextStep();
                                      },
@@ -179,13 +183,13 @@ define(['character', 'timer'], function(Character, Timer) {
                                      c.moveSpeed);
                 }
                 else if(c.nextGridY > c.gridY) {
-                    c.movement.start(this.game.currentTime,
+                    c.movementY.start(this.game.currentTime,
                                      function(y) {
                                         c.y = y;
                                         c.hasMoved();
                                      },
                                      function() {
-                                        c.y = c.movement.endValue;
+                                        c.y = c.movementY.endValue;
                                         c.hasMoved();
                                         c.nextStep();
                                      },

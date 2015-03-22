@@ -27,7 +27,7 @@ define(['lib/astar'], function(AStar) {
 
             this.grid = grid;
         	this.applyIgnoreList_(true);
-            path = AStar(this.grid, start, end);
+            path = AStar(this.grid, start, end, "Diagonal");
         
             if(path.length === 0 && findIncomplete === true) {
                 // If no path was found, try and find an incomplete one
