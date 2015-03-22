@@ -147,7 +147,8 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
           var posX = this.gridX, posY = this.gridY;
 
           if(this.isMoving()) {
-            posX = this.destination.gridX, posY = this.destination.gridY;
+            //posX = this.destination.gridX, posY = this.destination.gridY;
+			return;
           }
 
           this.moveTo_(posX + dX, posY + dY);
