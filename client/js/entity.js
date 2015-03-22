@@ -91,24 +91,24 @@ define(function() {
     	setAnimation: function(name, speed, count, onEndCount) {
     	    var self = this;
 	    
-            if(this.isLoaded) {
-    		    if(this.currentAnimation && this.currentAnimation.name === name) {
-    		        return;
-    		    }
-		    
-    		    var s = this.sprite,
-                    a = this.getAnimationByName(name);
+          if(this.isLoaded) {
+            if(this.currentAnimation && this.currentAnimation.name === name) {
+                return;
+            }
+      
+            var s = this.sprite,
+                a = this.getAnimationByName(name);
 		
-    			if(a) {
-    				this.currentAnimation = a;
-    				if(name.substr(0, 3) === "atk") {
-    				    this.currentAnimation.reset();
-    				}
-    				this.currentAnimation.setSpeed(speed);
-    				this.currentAnimation.setCount(count ? count : 0, onEndCount || function() {
-    				    self.idle();
-    				});
-    			}
+            if(a) {
+              this.currentAnimation = a;
+              if(name.substr(0, 3) === "atk") {
+                this.currentAnimation.reset();
+              }
+              this.currentAnimation.setSpeed(speed);
+              this.currentAnimation.setCount(count ? count : 0, onEndCount || function() {
+                  self.idle();
+              });
+            }
     		}
     		else {
     			this.log_error("Not ready for animation");

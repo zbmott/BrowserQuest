@@ -5,22 +5,26 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
         MAX_LEVEL: 10,
     
         init: function(id, name, kind) {
-            this._super(id, kind);
-        
-            this.name = name;
-        
-            // Renderer
-     		this.nameOffsetY = -10;
-        
-            // sprites
-            this.spriteName = "clotharmor";
-            this.weaponName = "sword1";
-        
-            // modes
-            this.isLootMoving = false;
-            this.isSwitchingWeapon = true;
+          this._super(id, kind);
+      
+          this.name = name;
+      
+          // Renderer
+          this.nameOffsetY = -10;
+      
+          // sprites
+          this.spriteName = "clotharmor";
+          this.weaponName = "sword1";
+      
+          // modes
+          this.isLootMoving = false;
+          this.isSwitchingWeapon = true;
+
+          // inventory
+          this.inventorySize = 100;
+          this.inventory = [];
         },
-    
+
         loot: function(item) {
             if(item) {
                 var rank, currentRank, msg, currentArmorName;

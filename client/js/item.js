@@ -5,9 +5,10 @@ define(['entity'], function(Entity) {
         init: function(id, kind, type) {
     	    this._super(id, kind);
 
-            this.itemKind = Types.getKindAsString(kind);
+          this.itemKind = Types.getKindAsString(kind);
     	    this.type = type;
     	    this.wasDropped = false;
+          this.size = 0; 
         },
 
         hasShadow: function() {

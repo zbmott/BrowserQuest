@@ -1612,6 +1612,7 @@ window.player = this.player;
          * 
          */
         makePlayerAttack: function(mob) {
+ console.log("Player " + this.playerId + " attacks mob " + mob.id);           
             this.createAttackLink(this.player, mob);
             this.client.sendAttack(mob);
         },
@@ -1916,29 +1917,21 @@ window.player = this.player;
          */
         click: function() {
           var pos = this.getNextTile(), entity;
-
-          if(pos.x === this.previousClickPosition.x
-          && pos.y === this.previousClickPosition.y) {
-              return;
-          } else {
-              this.previousClickPosition = pos;
+          this.previousClickPosition = pos;
+        
+          if(this.started
+            && this.player
+            && !this.isZoning()
+            && !this.isZoningTile(this.player.nextGridX, this.player.nextGridY)
+            && !this.player.isDead
+            && !this.hoveringCollidingTile
+            && !this.hoveringPlateauTile) {
+              this.makePlayerInteractWith(pos.x, pos.y);
           }
-	        
-    	    if(this.started
-    	    && this.player
-    	    && !this.isZoning()
-    	    && !this.isZoningTile(this.player.nextGridX, this.player.nextGridY)
-    	    && !this.player.isDead
-    	    && !this.hoveringCollidingTile
-    	    && !this.hoveringPlateauTile) {
-            this.makePlayerInteractWith(pos);
-        	}
         },
 
-        makePlayerInteractWith: function(pos) {
-          var entity = this.getEntityAt(pos.x, pos.y);
-
-          console.log(entity);
+        makePlayerInteractWith: function(x, y) {
+          var entity = this.getEntityAt(x, y);
 
           if(entity instanceof Mob) {
               this.makePlayerAttack(entity);
@@ -2112,38 +2105,40 @@ window.player = this.player;
                     return;
                 }
             }
-        
-            if(character.isAttacking() && !character.previousTarget) {
-                var isMoving = this.tryMovingToADifferentTile(character); // Don't let multiple mobs stack on the same tile when attacking a player.
-                
-                if(character.canAttack(time)) {
-                    if(!isMoving) { // don't hit target if moving to a different tile.
-                        if(character.hasTarget() && character.getOrientationTo(character.target) !== character.orientation) {
-                            character.lookAtTarget();
-                        }
-                        
-                        character.hit();
-                        
-                        if(character.id === this.playerId) {
-                            this.client.sendHit(character.target);
-                        }
-                        
-                        if(character instanceof Player && this.camera.isVisible(character)) {
-                            this.audioManager.playSound("hit"+Math.floor(Math.random()*2+1));
-                        }
-                        
-                        if(character.hasTarget() && character.target.id === this.playerId && this.player && !this.player.invincible) {
-                            this.client.sendHurt(character);
-                        }
-                    }
+
+            if(character.isAttacking()) {
+              if(character.canAttack(time)) {
+
+                character.hit()
+
+                if(character.id === this.playerId) {
+                  var pos = this.getNextTile();
+                  var mob = this.getMobAt(pos.x, pos.y);
+                  if(mob) {
+                    this.client.sendHit(mob);
+                    this.audioManager.playSound("hit"+Math.floor(Math.random()*2+1));
+                  }
+                  character.disengage();
                 } else {
-                    if(character.hasTarget()
-                    && character.isDiagonallyAdjacent(character.target)
-                    && character.target instanceof Player
-                    && !character.target.isMoving()) {
-                        character.follow(character.target);
+                  // Don't let multiple mobs stack on the same tile when attacking a player.
+                  var isMoving = this.tryMovingToADifferentTile(character); 
+                  if(!isMoving) {
+                    if(character.hasTarget() && character.getOrientationTo(character.target) !== character.orientation) {
+                        character.lookAtTarget();
                     }
+                    if(character.hasTarget() && character.target.id === this.playerId && this.player && !this.player.invincible) {
+                        this.client.sendHurt(character);
+                    }
+                  }
                 }
+              } else {
+                if(character.hasTarget()
+                && character.isDiagonallyAdjacent(character.target)
+                && character.target instanceof Player
+                && !character.target.isMoving()) {
+                    character.follow(character.target);
+                }
+              }
             }
         },
     

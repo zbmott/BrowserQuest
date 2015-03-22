@@ -122,7 +122,7 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     	},
 	
     	hit: function(orientation) {
-    	    this.setOrientation(orientation);
+          this.setOrientation(orientation);
     	    this.animate("atk", this.atkSpeed, 1);
     	},
 	
