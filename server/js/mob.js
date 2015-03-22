@@ -164,8 +164,12 @@ module.exports = Mob = Character.extend({
 		if(!this.hasTarget() && !this.isDead) {
 			switch(Properties.getPatrol(self.kind)){
 				case Types.Patrols.RANDOM:
-					var pos = mobArea._getRandomPositionInsideArea();
-					self.move(pos.x,pos.y);
+					if(Utils.coinflip()){
+						var pos = self.getPositionNextTo(self);
+						if(mobArea.world.isValidPosition(pos.x, pos.y)){
+							self.move(pos.x,pos.y);
+						}
+					}
 					break;
 				case Types.Patrols.LINE:
 					var p = self.patrolForward?1:-1;
