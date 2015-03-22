@@ -128,7 +128,7 @@ define(['character', 'timer'], function(Character, Timer) {
 
         updateCharacter: function(c) {
             var self = this;
-			self.game.makePlayerFaceCursor();
+
             // Estimate of the movement distance for one update
             var tick = Math.round(16 / Math.round((c.moveSpeed / (1000 / this.game.renderer.FPS))));
     

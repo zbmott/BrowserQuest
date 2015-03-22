@@ -309,38 +309,22 @@ define(['jquery', 'app'], function($, App) {
             	var key = e.which,
                     $chat = $('#chatinput');
 
-                if(key === 13) {
-                    if($('#chatbox').hasClass('active')) {
-                        app.hideChat();
-                    } else {
-                        app.showChat();
-                    }
-                }
+            if(!_.contains(app.game.keymap, key)) {
+              app.game.keymap.push(key);
+            }
 
-                var DIRECTION_VECTORS = {
-                  65: [-1, 0],
-                  37: [-1, 0],
-                  83: [0, 1],
-                  40: [0, 1],
-                  68: [1, 0],
-                  39: [1, 0],
-                  87: [0, -1],
-                  38: [0, -1]
-                }
-
-                var vector = DIRECTION_VECTORS[key];              
-                if(vector) {
-                  var dX = vector[0], dY = vector[1];
-                  var posX = player.gridX, posY = player.gridY;
-                  if(player.isMoving()) {
-                    posX = player.destination.gridX;
-                    posY = player.destination.gridY;
+              if(key === 13) {
+                  if($('#chatbox').hasClass('active')) {
+                      app.hideChat();
+                  } else {
+                      app.showChat();
                   }
+              }
+            });
 
-                  if(!app.game.isZoningTile(posX, posY)) {
-                    player.applyMovementVector(vector);
-                  }
-                }
+            $(document).keyup(function(e) {
+              var key = e.which;
+              app.game.keymap = _.without(app.game.keymap, key);
             });
             
             $('#chatinput').keydown(function(e) {

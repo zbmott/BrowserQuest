@@ -13,6 +13,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
             this.ready = false;
             this.started = false;
             this.hasNeverStarted = true;
+            this.keymap = [];
         
             this.renderer = null;
             this.updater = null;
@@ -1909,27 +1910,6 @@ window.player = this.player;
             }
         },
 		
-		makePlayerFaceCursor: function() {
-			var mouse = this.getMouseGridPosition(),
-			x = mouse.x-this.player.gridX,
-			y = mouse.y-this.player.gridY;
-			
-			if(this.player){
-				if(this.player.isMoving()){
-					if(Math.abs(y)<Math.abs(x)){
-						this.player.walk(x>0?Types.Orientations.RIGHT:Types.Orientations.LEFT);
-					}else if(Math.abs(y)>Math.abs(x)){
-						this.player.walk(y>0?Types.Orientations.DOWN:Types.Orientations.UP);
-					}
-				}else if(!this.player.isAttacking()){
-					if(Math.abs(y)<Math.abs(x)){
-						this.player.turnTo(x>0?Types.Orientations.RIGHT:Types.Orientations.LEFT);
-					}else if(Math.abs(y)>Math.abs(x)){
-						this.player.turnTo(y>0?Types.Orientations.DOWN:Types.Orientations.UP);
-					}
-				}
-			}
-		},
     
         /**
          * Processes game logic when the user triggers a click/touch event during the game.
@@ -2056,13 +2036,71 @@ window.player = this.player;
             }
             return false;
         },
-    
+   
+      makePlayerFaceCursor: function() {
+        var mouse = this.getMouseGridPosition(),
+        x = mouse.x-this.player.gridX,
+        y = mouse.y-this.player.gridY;
+        
+        if(this.player){
+          if(this.player.isMoving()){
+            if(Math.abs(y)<Math.abs(x)){
+              this.player.walk(x>0?Types.Orientations.RIGHT:Types.Orientations.LEFT);
+            }else if(Math.abs(y)>Math.abs(x)){
+              this.player.walk(y>0?Types.Orientations.DOWN:Types.Orientations.UP);
+            }
+          }else if(!this.player.isAttacking()){
+            if(Math.abs(y)<Math.abs(x)){
+              this.player.turnTo(x>0?Types.Orientations.RIGHT:Types.Orientations.LEFT);
+            }else if(Math.abs(y)>Math.abs(x)){
+              this.player.turnTo(y>0?Types.Orientations.DOWN:Types.Orientations.UP);
+            }
+          }
+        }
+      },
+
+      processKeymap: function() {
+        var DIRECTION_VECTORS = {
+          65: [-1, 0],
+          37: [-1, 0],
+          83: [0, 1],
+          40: [0, 1],
+          68: [1, 0],
+          39: [1, 0],
+          87: [0, -1],
+          38: [0, -1]
+        }
+
+        var vector = [0, 0];
+        _.each(this.keymap, function(key, idx) {
+          var dV = DIRECTION_VECTORS[key];
+          if(dV) {
+            vector[0] += dV[0];
+            vector[1] += dV[1];
+          }
+        }, this);
+
+        var dX = vector[0], dY = vector[1];
+        var posX = player.gridX, posY = player.gridY;
+        if(player.isMoving()) {
+          posX = player.destination.gridX;
+          posY = player.destination.gridY;
+        }
+
+        if(!this.isZoningTile(posX, posY)) {
+          player.applyMovementVector(vector);
+        }
+      },
+ 
         /**
          * 
          */
         onCharacterUpdate: function(character) {
             var time = this.currentTime,
                 self = this;
+
+            this.makePlayerFaceCursor();
+            this.processKeymap();
             
             // If mob has finished moving to a different tile in order to avoid stacking, attack again from the new position.
             if(character.previousTarget && !character.isMoving() && character instanceof Mob) {
