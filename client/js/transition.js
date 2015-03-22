@@ -3,8 +3,6 @@ define(function() {
 
     var Transition = Class.extend({
         init: function() {
-            this.startValues = [];
-            this.endValues = [];
             this.startValue = 0;
             this.endValue = 0;
             this.duration = 0;
@@ -23,7 +21,6 @@ define(function() {
         },
 
         step: function(currentTime) {
-          _.each(this.startValues, function(value, idx) {
             if(this.inProgress) {
                 if(this.count > 0) {
                     this.count -= 1;
@@ -37,7 +34,7 @@ define(function() {
                     }
         
                     var diff = this.endValue - this.startValue;
-                    var i = value + ((diff / this.duration) * elapsed);
+                    var i = this.startValue + ((diff / this.duration) * elapsed);
             
                     i = Math.round(i);
             
@@ -52,7 +49,6 @@ define(function() {
                     }
                 }
             }
-          }, this);
         },
 
         restart: function(currentTime, startValue, endValue) {
