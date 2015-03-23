@@ -13,7 +13,7 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     		this.orientation = Types.Orientations.DOWN;
 		
     		// Speeds
-            this.atkSpeed = 50;
+            this.atkSpeed = 25;
     		this.moveSpeed = 120;
     		this.walkSpeed = 100;
     		this.idleSpeed = 450;
@@ -93,15 +93,6 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
             default:
               this.idle();
           }
-/*
-          if(this.isAttacking()) {
-            this.hit(orientation);
-          } else if(this.isMoving()) {
-            this.walk(orientation);
-          } else {
-            this.idle(orientation);
-          }
-*/
       },
 	
     	setOrientation: function(orientation) {
