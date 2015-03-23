@@ -1937,7 +1937,7 @@ window.player = this.player;
 
         makePlayerInteractWith: function(x, y) {
           var entity = this.getEntityAt(x, y);
-
+		  if(!entity) this.player.hit(this.player.orientation);
           if(entity instanceof Mob) {
               this.makePlayerAttack(entity);
           }

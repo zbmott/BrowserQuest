@@ -95,6 +95,10 @@ define(function() {
             if(this.currentAnimation && this.currentAnimation.name === name) {
                 return;
             }
+			
+			if((this.currentAnimation) && (this.currentAnimation.name.substr(0, 3) === "atk") && (this.currentAnimation.count>0)){
+				return;
+			}
       
             var s = this.sprite,
                 a = this.getAnimationByName(name);
