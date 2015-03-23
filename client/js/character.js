@@ -17,7 +17,7 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     		this.moveSpeed = 120;
     		this.walkSpeed = 100;
     		this.idleSpeed = 450;
-    		this.setAttackRate(800);
+    		this.setAttackRate(400);
         
             // Pathing
     		this.movementX = new Transition();
@@ -85,8 +85,23 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     	},
     
       turnTo: function(orientation) {
-          this.orientation = orientation;
-          this.idle(orientation);
+          this.setOrientation(orientation);
+          switch(this.currentAnimation.name) {
+            case 'atk':
+            case 'walk':
+              break;
+            default:
+              this.idle();
+          }
+/*
+          if(this.isAttacking()) {
+            this.hit(orientation);
+          } else if(this.isMoving()) {
+            this.walk(orientation);
+          } else {
+            this.idle(orientation);
+          }
+*/
       },
 	
     	setOrientation: function(orientation) {
@@ -122,9 +137,9 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     	    this.animate("idle", this.idleSpeed);
     	},
 	
-    	hit: function(orientation) {
+    	hit: function(orientation, onEndCount) {
           this.setOrientation(orientation);
-    	    this.animate("atk", this.atkSpeed, 1);
+    	    this.animate("atk", this.atkSpeed, 1, onEndCount);
     	},
 	
     	walk: function(orientation) {

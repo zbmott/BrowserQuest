@@ -4,7 +4,7 @@ var Utils = require("./utils");
 var Formulas = {};
 
 Formulas.dmg = function(weaponLevel, armorLevel) {
-    var dealt = weaponLevel * Utils.randomInt(5, 10),
+    var dealt = weaponLevel * Utils.randomInt(2.5, 5),
         absorbed = armorLevel * Utils.randomInt(1, 3),
         dmg =  dealt - absorbed;
     

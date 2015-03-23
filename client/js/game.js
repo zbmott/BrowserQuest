@@ -1917,7 +1917,12 @@ window.player = this.player;
          */
         click: function() {
           var pos = this.getNextTile(), entity;
-          this.previousClickPosition = pos;
+          if(this.previousClickPosition === pos.x &&
+             this.previousClickPosition.y === pos.y) {
+            return;
+          } else {
+            this.previousClickPosition = pos;
+          }
         
           if(this.started
             && this.player
@@ -2080,7 +2085,7 @@ window.player = this.player;
           posY = player.destination.gridY;
         }
 
-        if(!this.isZoningTile(posX, posY)) {
+        if(!this.isZoning() && !this.isZoningTile(posX, posY)) {
           player.applyMovementVector(vector);
         }
       },
@@ -2109,17 +2114,19 @@ window.player = this.player;
             if(character.isAttacking()) {
               if(character.canAttack(time)) {
 
-                character.hit()
-
                 if(character.id === this.playerId) {
+                  character.hit(null, function() {
+                    character.disengage();
+                  });
                   var pos = this.getNextTile();
                   var mob = this.getMobAt(pos.x, pos.y);
                   if(mob) {
                     this.client.sendHit(mob);
                     this.audioManager.playSound("hit"+Math.floor(Math.random()*2+1));
+                    this.previousClickPosition = {};
                   }
-                  character.disengage();
                 } else {
+                  character.hit();
                   // Don't let multiple mobs stack on the same tile when attacking a player.
                   var isMoving = this.tryMovingToADifferentTile(character); 
                   if(!isMoving) {
@@ -2426,7 +2433,7 @@ window.player = this.player;
         },
     
         /**
-         * Fake a mouse move event in order to update the cursor.
+         * Fake a mouse                   this.previousClickPosition = {}; move event in order to update the cursor.
          *
          * For instance, to get rid of the sword cursor in case the mouse is still hovering over a dying mob.
          * Also useful when the mouse is hovering a tile where an item is appearing.
