@@ -20,12 +20,14 @@ define(['character', 'timer'], function(Character, Timer) {
 
         updateCharacters: function() {
             var self = this;
-        
+			var g = this.game,
+			c = g.camera;
             this.game.forEachEntity(function(entity) {
                 var isCharacter = entity instanceof Character;
             
                 if(entity.isLoaded) {
-                    if(isCharacter) {
+                    if(isCharacter && c.isVisible(entity)) {
+						console.log(Types.getKindAsString(entity.kind));
                         self.updateCharacter(entity);
                         self.game.onCharacterUpdate(entity);
                     }
@@ -204,13 +206,15 @@ define(['character', 'timer'], function(Character, Timer) {
             var t = this.game.currentTime;
     
             this.game.forEachEntity(function(entity) {
-                var anim = entity.currentAnimation;
-                
-                if(anim) {
-                    if(anim.update(t)) {
-                        entity.setDirty();
-                    }
-                }
+				if(this.game.camera.isVisible(entity)){
+					var anim = entity.currentAnimation;
+					
+					if(anim) {
+						if(anim.update(t)) {
+							entity.setDirty();
+						}
+					}
+				}
             });
         
             var sparks = this.game.sparksAnimation;
@@ -222,6 +226,7 @@ define(['character', 'timer'], function(Character, Timer) {
             if(target) {
                 target.update(t);
             }
+
         },
     
         updateAnimatedTiles: function() {
