@@ -26,7 +26,7 @@ define(['character', 'timer'], function(Character, Timer) {
                 var isCharacter = entity instanceof Character;
             
                 if(entity.isLoaded) {
-                    if(isCharacter && c.isVisible(entity)) {
+                    if(isCharacter && (c.isVisible(entity) || entity.isDead)) {
 						console.log(Types.getKindAsString(entity.kind));
                         self.updateCharacter(entity);
                         self.game.onCharacterUpdate(entity);
@@ -204,9 +204,11 @@ define(['character', 'timer'], function(Character, Timer) {
 
         updateAnimations: function() {
             var t = this.game.currentTime;
-    
+			var g = this.game,
+			c = g.camera;
+	
             this.game.forEachEntity(function(entity) {
-				if(this.game.camera.isVisible(entity)){
+				if(c.isVisible(entity)){
 					var anim = entity.currentAnimation;
 					
 					if(anim) {
